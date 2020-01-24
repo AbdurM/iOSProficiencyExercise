@@ -3,9 +3,10 @@ import UIKit
 class PhotosViewController: UIViewController
 {
     //MARK: - Properties
-    @IBOutlet var imageView: UIImageView!
+    @IBOutlet var collectionView: UICollectionView!
     
     var store: PhotoStore!
+    let photoDataSource = PhotoDataSource()
     
     
     //MARK: - View lifecycle
@@ -13,6 +14,7 @@ class PhotosViewController: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        collectionView.dataSource = photoDataSource
         store.fetchPhotos{
         
             (photosResult) -> Void in
@@ -21,31 +23,19 @@ class PhotosViewController: UIViewController
             {
             case let .success(photos):
                 print("Successfully found \(photos.count)")
-                
-                if let firstPhoto = photos.first {
-                    self.updateImageView(for: firstPhoto)
-                }
+                self.photoDataSource.photos = photos
+            
                 
             case let .failure(error):
                 print("Error fetching photos \(error)")
+                self.photoDataSource.photos.removeAll()
                 
+            }
+            
+            self.collectionView.reloadSections(IndexSet(integer:0))
             }
 
         }
     }
-    //MARK: - Updating the imageview
-    func updateImageView(for photo: Photo)
-     {
-         store.fetchImage(for: photo){
-             (imageResult) -> Void in
-             
-             switch imageResult {
-                 
-             case let .success(image):
-                 self.imageView.image = image
-             case let .failure(error):
-                 print("Error downloading the image: \(error)")
-             }
-         }
-     }
-}
+  
+
