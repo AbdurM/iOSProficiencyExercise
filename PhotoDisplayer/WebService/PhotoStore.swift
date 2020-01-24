@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 class PhotoStore
 {
@@ -21,7 +22,12 @@ class PhotoStore
             if let jsonData = data, let utf8Data = String(decoding: jsonData, as: UTF8.self).data(using: .utf8)
             {
                 let result = self.processPhotosRequest(data: utf8Data, error: error)
+               
+                OperationQueue.main.addOperation {
+                
                 completion(result)
+                
+                }
             }
     }
         task.resume()
@@ -36,4 +42,41 @@ class PhotoStore
         
         return PhotosAPI.photos(fromJSON: jsonData)
     }
+    
+    func fetchImage(for photo: Photo, completion: @escaping (ImageResult)-> Void)
+    {
+        let photoUrl = photo.remoteURL
+        let request = URLRequest(url: photoUrl)
+        
+        let task = session.dataTask(with: request)
+        {
+            (data, response, error)-> Void in
+            
+            let result = self.processImageRequest(data: data, error: error)
+           
+            //because this is a UIOperation and by default URLSessionDataTask runs the completion handler on a background thread
+            OperationQueue.main.addOperation {
+                completion(result)
+            }
+        }
+        
+        task.resume()
+    }
+    
+    private func processImageRequest(data: Data?, error: Error?) -> ImageResult
+    {
+        guard
+            let imageData = data,
+            let image = UIImage(data: imageData)
+            else{
+                if data == nil{
+                    return .failure(error!)
+                }
+                else{
+                    return .failure(PhotoError.imageCreationError)
+                }
+        }
+        return .success(image)
+    }
+    
 }
