@@ -106,7 +106,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
         let flowLayout = UICollectionViewFlowLayout()
         collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: flowLayout )
         collectionView.backgroundColor = UIColor.white
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "collectionCell")
+        collectionView.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: "photoCollectionViewCell")
          collectionView.delegate = self
         collectionView.dataSource = photoDataSource
      
