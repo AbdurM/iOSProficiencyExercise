@@ -57,7 +57,14 @@ class PhotoStore
            }
        }
         
-        let photoUrl = photo.remoteURL
+       guard let photoUrl = photo.remoteURL else
+       {
+         OperationQueue.main.addOperation {
+            completion(.failure(PhotoError.missingUrlError))
+        }
+            return
+       }
+        
         let request = URLRequest(url: photoUrl)
         
         let task = session.dataTask(with: request)

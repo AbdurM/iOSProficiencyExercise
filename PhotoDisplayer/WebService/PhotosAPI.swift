@@ -53,15 +53,10 @@ struct PhotosAPI {
     //parse json dictionary into photo instance
     private static func photo(fromJSON json: [String: Any]) -> Photo?
     {
-        guard
-            let title = json["title"] as? String,
-            let description = json["description"] as? String,
-            let photoURLString = json["imageHref"] as? String,
-            let url = URL(string: photoURLString)
-            else{
-                //Don't have enough infomation to construct a photo
-                return nil
-        }
+        let title = json["title"] as? String ?? ""
+        let description = json["description"] as? String ?? ""
+        let photoURLString = json["imageHref"] as? String ?? ""
+        let url = URL(string: photoURLString)
         
         return Photo(title: title, description: description, remoteURL: url)
     }

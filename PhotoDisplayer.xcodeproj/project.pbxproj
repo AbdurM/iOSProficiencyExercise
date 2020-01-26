@@ -17,6 +17,7 @@
 		3743D50B23DB2EB600DE679A /* PhotoExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3743D50A23DB2EB600DE679A /* PhotoExtension.swift */; };
 		3743D50D23DC066000DE679A /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3743D50C23DC065F00DE679A /* ImageStore.swift */; };
 		3743D51223DC085800DE679A /* PhotoInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3743D51123DC085800DE679A /* PhotoInfoViewController.swift */; };
+		3743D51423DDD49100DE679A /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3743D51323DDD49100DE679A /* UIImageExtension.swift */; };
 		37E4E54823D7CEEF0010B6A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E4E54723D7CEEF0010B6A4 /* AppDelegate.swift */; };
 		37E4E54A23D7CEEF0010B6A4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E4E54923D7CEEF0010B6A4 /* SceneDelegate.swift */; };
 		37E4E55123D7CEF10010B6A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 37E4E55023D7CEF10010B6A4 /* Assets.xcassets */; };
@@ -55,6 +56,7 @@
 		3743D50A23DB2EB600DE679A /* PhotoExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoExtension.swift; sourceTree = "<group>"; };
 		3743D50C23DC065F00DE679A /* ImageStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
 		3743D51123DC085800DE679A /* PhotoInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInfoViewController.swift; sourceTree = "<group>"; };
+		3743D51323DDD49100DE679A /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		37E4E54423D7CEEF0010B6A4 /* PhotoDisplayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoDisplayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37E4E54723D7CEEF0010B6A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		37E4E54923D7CEEF0010B6A4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				3743D50A23DB2EB600DE679A /* PhotoExtension.swift */,
+				3743D51323DDD49100DE679A /* UIImageExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -366,6 +369,7 @@
 				3743D44023D89C4A00DE679A /* PhotosError.swift in Sources */,
 				37E4E54A23D7CEEF0010B6A4 /* SceneDelegate.swift in Sources */,
 				37E4E57A23D7D1330010B6A4 /* PhotosAPI.swift in Sources */,
+				3743D51423DDD49100DE679A /* UIImageExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,7 +525,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = PhotoDisplayer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -539,7 +543,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = PhotoDisplayer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

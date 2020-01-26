@@ -37,30 +37,12 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
             }
             
             self.collectionView.reloadSections(IndexSet(integer:0))
-            }
-
+            
         }
-    
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        switch segue.identifier
-        {
-        case "showPhoto":
-            if let selectedIndexPath = collectionView.indexPathsForSelectedItems?.first
-            {
-                let photo = photoDataSource.photos[selectedIndexPath.row]
-                
-                let destinationVC = segue.destination as! PhotoInfoViewController
-                
-                destinationVC.photo = photo
-                destinationVC.store = store
-            }
-        default:
-            preconditionFailure("Unexpected segue identifier.")
+        
         }
-    }
-    
+        
     //MARK: - UICollectionViewDelegate methods
     
   func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -68,25 +50,36 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
          let photo = photoDataSource.photos[indexPath.row]
          
          //Download the image data which could take some time
-         store.fetchImage(for: photo){
+         store.fetchImage(for: photo) {
              (result) -> Void in
-             
-             //the index path of the photo might have changed between
-             //the time request started and finished, so find the most
-             //recent index path
-             
-             guard let photoIndex = self.photoDataSource.photos.firstIndex(of: photo),
-                 case let .success(image) = result
-                else {
-                    return
+            
+            var cellImage: UIImage!
+            
+            switch result{
+            case let .success(image):
+                cellImage = image
+            case let .failure(error):
+                print("Image fetching failed due to \(error)")
+                cellImage = UIImage(systemName: "x.circle.fill")
+                
              }
-             
-             let photoIndexPath = IndexPath(item: photoIndex, section: 0)
+            
+            //the index path of the photo might have changed between
+            //the time request started and finished, so find the most
+            //recent index path
+                
+            guard let photoIndex = self.photoDataSource.photos.firstIndex(of: photo) else
+            {
+             return
+            }
+            
+            let photoIndexPath = IndexPath(item: indexPath.row, section: 0)
              
              //when the request finishes, only update the cell if it is still visible
              if let cell = self.collectionView.cellForItem(at: photoIndexPath) as? PhotoCollectionViewCell
              {
-                 cell.update(with: image)
+                
+                 cell.update(with: cellImage)
              }
              
          }
@@ -101,13 +94,32 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
         return UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    
+        let photo = photoDataSource.photos[indexPath.row]
+                      
+        let photoInfoViewController = PhotoInfoViewController()
+                      
+        photoInfoViewController.photo = photo
+        
+        self.navigationController?.pushViewController(photoInfoViewController, animated: true)
+        
+    }
+    
+    
+    
+    
     func setUpCollectionView()
     {
         let flowLayout = UICollectionViewFlowLayout()
+        
         collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: flowLayout )
+        
         collectionView.backgroundColor = UIColor.white
+        
         collectionView.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: "photoCollectionViewCell")
-         collectionView.delegate = self
+        
+        collectionView.delegate = self
         collectionView.dataSource = photoDataSource
      
         

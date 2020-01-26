@@ -48,7 +48,7 @@ class PhotoCollectionViewCell: UICollectionViewCell
         addSubview(imageView)
         addSubview(spinner)
         
-        //adding constraints
+        //adding and activating constraints
         imageView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         imageView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -69,6 +69,12 @@ class PhotoCollectionViewCell: UICollectionViewCell
             spinner.startAnimating()
             imageView.image = nil
         }
+    }
+    
+    func updateImageNotAvailable()
+    {
+        var image = UIImage.createImageWithText(text: "Image Unavailable", imageSize: self.contentView.bounds.size, image: UIImage())
+        update(with: image)
     }
 }
 
