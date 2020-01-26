@@ -3,6 +3,8 @@ import UIKit
 
 class PhotoStore
 {
+    let imageStore = ImageStore()
+    
     private let session: URLSession = {
         let config = URLSessionConfiguration.default
         
@@ -45,6 +47,16 @@ class PhotoStore
     
     func fetchImage(for photo: Photo, completion: @escaping (ImageResult)-> Void)
     {
+        let photoKey = photo.photoId
+        
+        //loading from cache
+       if let image = imageStore.image(forkey: photoKey)
+       {
+           OperationQueue.main.addOperation {
+               completion(.success(image))
+           }
+       }
+        
         let photoUrl = photo.remoteURL
         let request = URLRequest(url: photoUrl)
         
@@ -54,6 +66,10 @@ class PhotoStore
             
             let result = self.processImageRequest(data: data, error: error)
            
+            if case let .success(image) = result {
+                self.imageStore.SetImage(image, forKey: photoKey)
+            }
+            
             //because this is a UIOperation and by default URLSessionDataTask runs the completion handler on a background thread
             OperationQueue.main.addOperation {
                 completion(result)
