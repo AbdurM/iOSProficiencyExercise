@@ -37,13 +37,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func initialize()
-      {
-          let rootViewController = window!.rootViewController as! UINavigationController
-          
-          let photosViewController = rootViewController.topViewController as! PhotosViewController
-              
-          photosViewController.store = PhotoStore()
-      }
+    {
+        self.window =  UIWindow(frame: UIScreen.main.bounds)
+        let navigationController = UINavigationController()
+        
+        let photosViewController = PhotosViewController(nibName: nil, bundle: nil)
+        photosViewController.store = PhotoStore()
+        
+        navigationController.viewControllers = [photosViewController]
+        
+        window!.rootViewController = navigationController
+        window!.makeKeyAndVisible()
+    
+    }
 
 }
 

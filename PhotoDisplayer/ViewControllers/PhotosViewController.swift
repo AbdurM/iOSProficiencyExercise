@@ -1,9 +1,10 @@
 import UIKit
 
-class PhotosViewController: UIViewController, UICollectionViewDelegate
+class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
 {
     //MARK: - Properties
-    @IBOutlet var collectionView: UICollectionView!
+    
+    var collectionView: UICollectionView!
     
     var store: PhotoStore!
     let photoDataSource = PhotoDataSource()
@@ -14,8 +15,10 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.dataSource = photoDataSource
-        collectionView.delegate = self
+        print("view loaded")
+        setUpCollectionView()
+        self.view.backgroundColor = UIColor.white
+        
         store.fetchPhotos{
         
             (photosResult) -> Void in
@@ -88,6 +91,31 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate
              
          }
      }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        return CGSize(width: 50, height: 50)
     }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+    }
+    
+    func setUpCollectionView()
+    {
+        let flowLayout = UICollectionViewFlowLayout()
+        collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: flowLayout )
+        collectionView.backgroundColor = UIColor.white
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "collectionCell")
+         collectionView.delegate = self
+        collectionView.dataSource = photoDataSource
+     
+        
+        self.view.addSubview(collectionView)
+        
+    }
+    
+}
+
   
 

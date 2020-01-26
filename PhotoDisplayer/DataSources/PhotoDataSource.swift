@@ -14,16 +14,14 @@ class PhotoDataSource: NSObject, UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
         
-        let identifier = "PhotoCollectionViewCell"
+        let identifier = "collectionCell"
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
-        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as UICollectionViewCell
+        cell.backgroundColor = UIColor.lightGray
         return cell
     }
     
 
-
-    
     
 }
 
