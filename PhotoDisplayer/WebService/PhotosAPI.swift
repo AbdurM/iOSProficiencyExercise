@@ -3,13 +3,15 @@ import Foundation
 struct PhotosAPI {
    
     //MARK: - URL Creation
+    
     static var photosURL: URL {
         
         let components = URLComponents(string: Constants.baseUrlString)!
         return components.url!
     }
-    
+
     //MARK: - JSON Parsing
+    
     static func photos(fromJSON data: Data) -> PhotosResult
     {
         do{
@@ -20,7 +22,7 @@ struct PhotosAPI {
                 else{
                     return .failure(PhotosError.invalidJSONData)
             }
-            
+    
             var finalPhotos = [Photo]()
             
             for photoJSON in photosArray {

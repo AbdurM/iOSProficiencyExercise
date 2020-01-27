@@ -3,7 +3,16 @@ import UIKit
 class PhotoInfoViewController: UIViewController
 {
     //MARK: - Properties
-    var imageView: UIImageView = {
+    
+    var photo: Photo! {
+        didSet {
+            navigationItem.title = photo.title
+        }
+    }
+    
+    var store: PhotoStore!
+    
+    private var imageView: UIImageView = {
         
         var imageView = UIImageView()
         imageView.backgroundColor = UIColor.lightGray
@@ -12,7 +21,7 @@ class PhotoInfoViewController: UIViewController
         return imageView
     }()
     
-    var descriptionTextView: UITextView = {
+   private var descriptionTextView: UITextView = {
           
           var textView = UITextView()
           textView.translatesAutoresizingMaskIntoConstraints = false
@@ -24,9 +33,7 @@ class PhotoInfoViewController: UIViewController
           
       }()
     
-    
-    
-    var stackView: UIStackView = {
+    private var stackView: UIStackView = {
         var stackView = UIStackView()
         stackView.axis  = .vertical
         stackView.distribution  = .fillEqually
@@ -38,13 +45,6 @@ class PhotoInfoViewController: UIViewController
         
     }()
     
-    var photo: Photo! {
-        didSet {
-            navigationItem.title = photo.title
-        }
-    }
-    
-    var store: PhotoStore!
     
     //MARK: - View lifecycle
     
@@ -72,8 +72,7 @@ class PhotoInfoViewController: UIViewController
 
     }
     
-    
-    func addViews()
+    private func addViews()
     {
         stackView.addArrangedSubview(imageView)
         stackView.addArrangedSubview(descriptionTextView)

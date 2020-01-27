@@ -5,6 +5,7 @@ class PhotoDataSource: NSObject, UICollectionViewDataSource
     //MARK: - Properties
     var photos = [Photo]()
     
+    //MARK: - UICollectionViewDataSource Methods
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         

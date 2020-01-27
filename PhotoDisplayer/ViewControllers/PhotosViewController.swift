@@ -3,8 +3,9 @@ import UIKit
 class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
 {
     //MARK: - Properties
+    
     var collectionView: UICollectionView!
-    var refreshControl: UIRefreshControl!
+    private var refreshControl: UIRefreshControl!
     
     var store: PhotoStore!
     let photoDataSource = PhotoDataSource()
@@ -14,9 +15,34 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = Bundle.appName()
         setUpView()
-        self.view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor.white
         fetchPhotos()
+    }
+ 
+    
+    private func setUpView()
+    {
+        //setting up collection view
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: flowLayout )
+        collectionView.backgroundColor = UIColor.white
+        collectionView.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: "photoCollectionViewCell")
+        collectionView.delegate = self
+        collectionView.dataSource = photoDataSource
+     
+        //setting up UIRefresh control
+        refreshControl = UIRefreshControl()
+        collectionView!.alwaysBounceVertical = true
+        refreshControl.tintColor = UIColor.darkGray
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        
+        collectionView.refreshControl = refreshControl
+        
+        view.addSubview(collectionView)
+        
     }
         
   //MARK: - UICollectionViewDelegate methods
@@ -45,7 +71,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
                 
             guard let photoIndex = self.photoDataSource.photos.firstIndex(of: photo) else
             {
-             return
+                return
             }
             
             let photoIndexPath = IndexPath(item: photoIndex, section: 0)
@@ -77,60 +103,28 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
         
     }
     
-    func setUpView()
-    {
-        //setting up collection view
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: flowLayout )
-        collectionView.backgroundColor = UIColor.white
-        collectionView.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: "photoCollectionViewCell")
-        collectionView.delegate = self
-        collectionView.dataSource = photoDataSource
-     
-        //setting up UIRefresh control
-        refreshControl = UIRefreshControl()
-        collectionView!.alwaysBounceVertical = true
-        refreshControl.tintColor = UIColor.darkGray
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        
-        collectionView.refreshControl = refreshControl
-        
-        view.addSubview(collectionView)
-        
-    }
+   //MARK: - Pull to refresh methods
     
-    //MARK: - Pull to refresh methods
     @objc
-    func refresh() {
-       //self.collectionView!.refreshControl?.beginRefreshing()
-       print(#function)
+   private func refresh() {
        fetchPhotos()
      }
 
-    func stopRefresher() {
-    
-        OperationQueue.main.addOperation {
-           
-            guard let isRefreshing = self.collectionView.refreshControl?.isRefreshing
-            else
-            {
-                    return
-            }
-            
-            if isRefreshing
-            {
-                self.collectionView.refreshControl?.endRefreshing()
-                self.view.layoutIfNeeded()
-            }
-            
-     }
+   private func stopRefresher() {
+
+    guard let isRefreshing = self.collectionView.refreshControl?.isRefreshing, isRefreshing == true else
+    {
+        return
     }
-    
+    OperationQueue.main.addOperation {
+        print(#function)
+        self.collectionView.refreshControl?.endRefreshing()
+     }
+  }
     
     //MARK: - fetching photos
     
-    func fetchPhotos()
+    private func fetchPhotos()
     {
         store.fetchPhotos{
         
@@ -149,8 +143,9 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
                 
             }
             
+            self.stopRefresher()
+            
             OperationQueue.main.addOperation {
-                self.stopRefresher()
                 self.collectionView.reloadSections(IndexSet(integer:0))
             }
         }

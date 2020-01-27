@@ -27,6 +27,7 @@
 		37E4E57823D7CF190010B6A4 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E4E57723D7CF190010B6A4 /* PhotosViewController.swift */; };
 		37E4E57A23D7D1330010B6A4 /* PhotosAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E4E57923D7D1330010B6A4 /* PhotosAPI.swift */; };
 		37E4E57C23D7DADD0010B6A4 /* PhotoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E4E57B23D7DADD0010B6A4 /* PhotoStore.swift */; };
+		37FEEC2D23DF12EC00CB7559 /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37FEEC2C23DF12EC00CB7559 /* BundleExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		37E4E57723D7CF190010B6A4 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		37E4E57923D7D1330010B6A4 /* PhotosAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAPI.swift; sourceTree = "<group>"; };
 		37E4E57B23D7DADD0010B6A4 /* PhotoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStore.swift; sourceTree = "<group>"; };
+		37FEEC2C23DF12EC00CB7559 /* BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +160,7 @@
 			children = (
 				3743D50A23DB2EB600DE679A /* PhotoExtension.swift */,
 				3743D51323DDD49100DE679A /* UIImageExtension.swift */,
+				37FEEC2C23DF12EC00CB7559 /* BundleExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -376,6 +379,7 @@
 				3743D50823DACBFA00DE679A /* PhotoCollectionViewCell.swift in Sources */,
 				37E4E57823D7CF190010B6A4 /* PhotosViewController.swift in Sources */,
 				37E4E54823D7CEEF0010B6A4 /* AppDelegate.swift in Sources */,
+				37FEEC2D23DF12EC00CB7559 /* BundleExtension.swift in Sources */,
 				3743D50323DAC43500DE679A /* PhotoDataSource.swift in Sources */,
 				3743D51223DC085800DE679A /* PhotoInfoViewController.swift in Sources */,
 				3743D44023D89C4A00DE679A /* PhotosError.swift in Sources */,

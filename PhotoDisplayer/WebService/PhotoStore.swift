@@ -7,10 +7,8 @@ class PhotoStore
     
     private let session: URLSession = {
         let config = URLSessionConfiguration.default
-        
         return URLSession(configuration: config)
     }()
-    
     
     func fetchPhotos(completion: @escaping(PhotosResult)->Void){
         
@@ -25,10 +23,9 @@ class PhotoStore
             {
                 let result = self.processPhotosRequest(data: utf8Data, error: error)
                
+                //because this is a UIOperation and by default URLSessionDataTask runs the completion handler on a background thread
                 OperationQueue.main.addOperation {
-                
-                completion(result)
-                
+                        completion(result)
                 }
             }
     }
@@ -77,7 +74,6 @@ class PhotoStore
                 self.imageStore.SetImage(image, forKey: photoKey)
             }
             
-            //because this is a UIOperation and by default URLSessionDataTask runs the completion handler on a background thread
             OperationQueue.main.addOperation {
                 completion(result)
             }

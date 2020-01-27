@@ -58,7 +58,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     self.window =  UIWindow(frame: UIScreen.main.bounds)
     let navigationController = UINavigationController()
     
-    let photosViewController = PhotosViewController(nibName: nil, bundle: nil)
+    let photosViewController = PhotosViewController()
     photosViewController.store = PhotoStore()
 
     navigationController.viewControllers = [photosViewController]

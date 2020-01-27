@@ -4,7 +4,7 @@ class PhotoCollectionViewCell: UICollectionViewCell
 {
     //MARK: - Properties
     
-    var imageView: UIImageView = {
+    private var imageView: UIImageView = {
        
         var imageView = UIImageView()
         imageView.backgroundColor = UIColor.lightGray
@@ -13,7 +13,7 @@ class PhotoCollectionViewCell: UICollectionViewCell
         return imageView
     }()
     
-    var spinner: UIActivityIndicatorView = {
+    private var spinner: UIActivityIndicatorView = {
        
         var spinner = UIActivityIndicatorView()
         spinner.color = UIColor.black
@@ -24,6 +24,7 @@ class PhotoCollectionViewCell: UICollectionViewCell
     }()
     
     //MARK: - Initializers
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         addViews()
@@ -34,28 +35,27 @@ class PhotoCollectionViewCell: UICollectionViewCell
            fatalError("init(coder:) has not been implemented")
        }
  
+    private func addViews()
+       {
+           backgroundColor = UIColor.lightGray
+           
+           addSubview(imageView)
+           addSubview(spinner)
+           
+           //adding and activating constraints
+           imageView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+           imageView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+           imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+           imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+           
+           spinner.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
+           spinner.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
+       }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         
         update(with: nil)
-    }
-    
-    func addViews()
-    {
-        backgroundColor = UIColor.lightGray
-        
-        addSubview(imageView)
-        addSubview(spinner)
-        
-        //adding and activating constraints
-        imageView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        imageView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
-        spinner.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
-        spinner.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
     }
     
     func update(with image: UIImage?)
@@ -71,6 +71,5 @@ class PhotoCollectionViewCell: UICollectionViewCell
         }
     }
     
-  
 }
 
