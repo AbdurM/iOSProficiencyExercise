@@ -3,8 +3,8 @@ import UIKit
 class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
 {
     //MARK: - Properties
-    
     var collectionView: UICollectionView!
+    var refreshControl: UIRefreshControl!
     
     var store: PhotoStore!
     let photoDataSource = PhotoDataSource()
@@ -14,31 +14,9 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("view loaded")
-        setUpCollectionView()
+        addViews()
         self.view.backgroundColor = UIColor.white
-        
-        store.fetchPhotos{
-        
-            (photosResult) -> Void in
-            
-            switch photosResult
-            {
-            case let .success(photos):
-                print("Successfully found \(photos.count)")
-                self.photoDataSource.photos = photos
-            
-                
-            case let .failure(error):
-                print("Error fetching photos \(error)")
-                self.photoDataSource.photos.removeAll()
-                
-            }
-            
-            self.collectionView.reloadSections(IndexSet(integer:0))
-            
-        }
+        fetchPhotos()
         
         
         }
@@ -101,15 +79,13 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
         let photoInfoViewController = PhotoInfoViewController()
                       
         photoInfoViewController.photo = photo
+        photoInfoViewController.store = store
         
         self.navigationController?.pushViewController(photoInfoViewController, animated: true)
         
     }
     
-    
-    
-    
-    func setUpCollectionView()
+    func addViews()
     {
         let flowLayout = UICollectionViewFlowLayout()
         
@@ -122,9 +98,73 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
         collectionView.delegate = self
         collectionView.dataSource = photoDataSource
      
+
+        refreshControl = UIRefreshControl()
+        collectionView!.alwaysBounceVertical = true
+        refreshControl.tintColor = UIColor.darkGray
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         
-        self.view.addSubview(collectionView)
+        collectionView.refreshControl = refreshControl
         
+        view.addSubview(collectionView)
+        
+    }
+    
+    //MARK: - Pull to refresh methods
+    @objc
+    func refresh() {
+       //self.collectionView!.refreshControl?.beginRefreshing()
+       print(#function)
+       fetchPhotos()
+     }
+
+    func stopRefresher() {
+    
+        OperationQueue.main.addOperation {
+            print(#function)
+            
+            guard let isRefreshing = self.collectionView!.refreshControl?.isRefreshing
+            else
+            {
+                    return
+            }
+            
+            if isRefreshing
+            {
+                self.collectionView!.refreshControl?.endRefreshing()
+                self.view.layoutIfNeeded()
+            }
+            
+     }
+    }
+    
+    
+    //MARK: - fetching photos
+    
+    func fetchPhotos()
+    {
+        store.fetchPhotos{
+        
+            (photosResult) -> Void in
+            
+            switch photosResult
+            {
+            case let .success(photos):
+                print("Successfully found \(photos.count)")
+                self.photoDataSource.photos = photos
+            
+                
+            case let .failure(error):
+                print("Error fetching photos \(error)")
+                self.photoDataSource.photos.removeAll()
+                
+            }
+            
+            OperationQueue.main.addOperation {
+                self.stopRefresher()
+                self.collectionView.reloadSections(IndexSet(integer:0))
+            }
+        }
     }
     
 }

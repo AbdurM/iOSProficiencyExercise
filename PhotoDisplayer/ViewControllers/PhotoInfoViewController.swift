@@ -12,17 +12,42 @@ class PhotoInfoViewController: UIViewController
         return imageView
     }()
     
+    var descriptionTextView: UITextView = {
+          
+          var textView = UITextView()
+          textView.translatesAutoresizingMaskIntoConstraints = false
+          textView.isScrollEnabled = true
+          textView.isEditable = false
+          return textView
+          
+      }()
+    
+    
+    var stackView: UIStackView = {
+        var stackView = UIStackView()
+        stackView.axis  = .vertical
+        stackView.distribution  = .fill
+        stackView.alignment = .fill
+        stackView.spacing   = 16.0
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.backgroundColor = UIColor.white
+        return stackView
+        
+    }()
+    
     var photo: Photo! {
         didSet {
             navigationItem.title = photo.title
         }
     }
     
+    var store: PhotoStore!
+    
     //MARK: - View lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        view.backgroundColor = UIColor.white
         addViews()
 
         store.fetchImage(for: photo){
@@ -32,21 +57,28 @@ class PhotoInfoViewController: UIViewController
                 
             case let .success(image):
                 self.imageView.image = image
+            
             case let .failure(error):
                 print("Error fetching image for photo:\(error)")
             }
         }
+        print(photo.description)
+       descriptionTextView.text = photo.description
+
     }
     
     
     func addViews()
     {
-        self.view.addSubview(imageView)
+        stackView.addArrangedSubview(imageView)
+        stackView.addArrangedSubview(descriptionTextView)
         
-        imageView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        imageView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        imageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        self.view.addSubview(stackView)
+
+        stackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         
     }
 }
