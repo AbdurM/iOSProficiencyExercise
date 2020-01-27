@@ -18,17 +18,20 @@ class PhotoInfoViewController: UIViewController
           textView.translatesAutoresizingMaskIntoConstraints = false
           textView.isScrollEnabled = true
           textView.isEditable = false
+          textView.font = Constants.regularTextFont
+          textView.textAlignment = .center
           return textView
           
       }()
     
     
+    
     var stackView: UIStackView = {
         var stackView = UIStackView()
         stackView.axis  = .vertical
-        stackView.distribution  = .fill
+        stackView.distribution  = .fillEqually
         stackView.alignment = .fill
-        stackView.spacing   = 16.0
+        stackView.spacing   = Constants.stackViewSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.backgroundColor = UIColor.white
         return stackView
@@ -49,6 +52,7 @@ class PhotoInfoViewController: UIViewController
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
         addViews()
+        descriptionTextView.text = photo.description
 
         store.fetchImage(for: photo){
             (result) -> Void in
@@ -60,10 +64,11 @@ class PhotoInfoViewController: UIViewController
             
             case let .failure(error):
                 print("Error fetching image for photo:\(error)")
+                self.imageView.image = Constants.defaultCellImage
+                self.descriptionTextView.text.append(Constants.imageNotFoundText)
             }
         }
-        print(photo.description)
-       descriptionTextView.text = photo.description
+      
 
     }
     

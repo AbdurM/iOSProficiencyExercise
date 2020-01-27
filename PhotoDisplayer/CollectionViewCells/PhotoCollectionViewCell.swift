@@ -71,10 +71,6 @@ class PhotoCollectionViewCell: UICollectionViewCell
         }
     }
     
-    func updateImageNotAvailable()
-    {
-        var image = UIImage.createImageWithText(text: "Image Unavailable", imageSize: self.contentView.bounds.size, image: UIImage())
-        update(with: image)
-    }
+  
 }
 

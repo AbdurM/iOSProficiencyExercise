@@ -2,13 +2,10 @@ import Foundation
 
 struct PhotosAPI {
    
-    //MARK: - Constants
-   private static let baseURLString = "https://dl.dropboxusercontent.com/s/2iodh4vg0eortkl/facts.json"
- 
     //MARK: - URL Creation
     static var photosURL: URL {
         
-        var components = URLComponents(string: baseURLString)!
+        let components = URLComponents(string: Constants.baseUrlString)!
         return components.url!
     }
     
@@ -19,7 +16,7 @@ struct PhotosAPI {
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
             
             guard  let jsonDictionary = jsonObject as? [AnyHashable: Any],
-                let photosArray = jsonDictionary["rows"] as? [[String: Any]]
+                let photosArray = jsonDictionary[Constants.jsonRootKey] as? [[String: Any]]
                 else{
                     return .failure(PhotosError.invalidJSONData)
             }
@@ -53,9 +50,9 @@ struct PhotosAPI {
     //parse json dictionary into photo instance
     private static func photo(fromJSON json: [String: Any]) -> Photo?
     {
-        let title = json["title"] as? String ?? ""
-        let description = json["description"] as? String ?? ""
-        let photoURLString = json["imageHref"] as? String ?? ""
+        let title = json[Constants.jsonPhotoTitleKey] as? String ?? Constants.defaultTitle
+        let description = json[Constants.jsonPhotoDescriptionKey] as? String ?? Constants.defaultDescription
+        let photoURLString = json[Constants.jsonPhotoUrlStringKey] as? String ?? Constants.defaultUrlString
         let url = URL(string: photoURLString)
         
         return Photo(title: title, description: description, remoteURL: url)

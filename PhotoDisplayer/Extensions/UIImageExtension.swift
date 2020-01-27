@@ -2,13 +2,16 @@ import Foundation
 import UIKit
 extension UIImage {
     
-    class func createImageWithText(text: String, imageSize: CGSize, image: UIImage) -> UIImage {
+    class func createImageWithText(text: String, image: UIImage) -> UIImage {
         
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
+        let imageSize = image.size
+        
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
         label.backgroundColor = UIColor.clear
         label.textAlignment = .center
         label.textColor = UIColor.black
         label.text = text
+        
         
         UIGraphicsBeginImageContextWithOptions(CGSize(width: imageSize.width, height: imageSize.height), false, 2.0)
           let currentView = UIView.init(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
