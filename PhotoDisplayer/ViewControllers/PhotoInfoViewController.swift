@@ -52,7 +52,7 @@ class PhotoInfoViewController: UIViewController
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
         addViews()
-        descriptionTextView.text = photo.description
+        descriptionTextView.text = photo.photoDescription
 
         store.fetchImage(for: photo){
             (result) -> Void in

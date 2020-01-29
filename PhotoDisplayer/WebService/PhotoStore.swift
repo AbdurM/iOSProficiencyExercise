@@ -1,8 +1,10 @@
 import Foundation
 import UIKit
+import CoreData
 
 class PhotoStore
 {
+    //MARK: - Properties
     let imageStore = ImageStore()
     
     private let session: URLSession = {
@@ -10,7 +12,42 @@ class PhotoStore
         return URLSession(configuration: config)
     }()
     
-    func fetchPhotos(completion: @escaping(PhotosResult)->Void){
+    //CoreData - NSPersistenceContainer
+    let persistenceContainer: NSPersistentContainer = {
+        
+        let container = NSPersistentContainer(name: "PhotoDisplayer")
+        
+        container.loadPersistentStores
+        { (description, error) in
+            
+            if let error = error {
+                print("Error setting up Core data: \(error)")
+            }
+                
+        }
+        return container
+    }()
+    
+    func fetchAllPhotos(completion: @escaping(PhotosResult)->Void){
+        
+        //fetching the photos from core data if available
+        
+        let fetchRequest : NSFetchRequest<Photo> = Photo.fetchRequest()
+        
+        let viewContext = persistenceContainer.viewContext
+        
+        //asynchnorous
+        viewContext.perform {
+            do
+            {
+                let allPhotos = try viewContext.fetch(fetchRequest)
+                completion(.success(allPhotos))
+            }
+            catch
+            {
+                completion(.failure(error))
+            }
+        }
         
         let url = PhotosAPI.photosURL
         
@@ -21,8 +58,23 @@ class PhotoStore
             
             if let jsonData = data, let utf8Data = String(decoding: jsonData, as: UTF8.self).data(using: .utf8)
             {
-                let result = self.processPhotosRequest(data: utf8Data, error: error)
+                var result = self.processPhotosRequest(data: utf8Data, error: error)
                
+                //NSManagedObject does not persist the changes until you tell the context to save the changes
+                
+                if case .success = result
+                {
+                    do
+                    {
+                        try self.persistenceContainer.viewContext.save()
+                    }
+                    catch
+                    {
+                        result = .failure(error)
+                    }
+                }
+                
+                
                 //because this is a UIOperation and by default URLSessionDataTask runs the completion handler on a background thread
                 OperationQueue.main.addOperation {
                         completion(result)
@@ -39,12 +91,15 @@ class PhotoStore
             return .failure(error!)
         }
         
-        return PhotosAPI.photos(fromJSON: jsonData)
+        return PhotosAPI.photos(fromJSON: jsonData, into: persistenceContainer.viewContext)
     }
     
     func fetchImage(for photo: Photo, completion: @escaping (ImageResult)-> Void)
     {
-        let photoKey = photo.photoId
+        guard let photoKey = photo.photoId else
+        {
+            preconditionFailure("Photo is expected to have a photoId")
+        }
         
         //loading from cache
        if let image = imageStore.image(forkey: photoKey)
@@ -62,7 +117,8 @@ class PhotoStore
             return
        }
         
-        let request = URLRequest(url: photoUrl)
+        //the compiler knows that NSURL and URL are related, so it handles the bridging conversion
+        let request = URLRequest(url: photoUrl as URL)
         
         let task = session.dataTask(with: request)
         {

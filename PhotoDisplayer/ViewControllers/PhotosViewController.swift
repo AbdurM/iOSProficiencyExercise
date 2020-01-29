@@ -18,7 +18,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
         navigationItem.title = Bundle.appName()
         setUpView()
         view.backgroundColor = UIColor.white
-        fetchPhotos()
+        updateDataSource()
     }
  
     
@@ -107,7 +107,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
     
     @objc
    private func refresh() {
-       fetchPhotos()
+       updateDataSource()
      }
 
    private func stopRefresher() {
@@ -124,9 +124,9 @@ class PhotosViewController: UIViewController, UICollectionViewDelegateFlowLayout
     
     //MARK: - fetching photos
     
-    private func fetchPhotos()
+    private func updateDataSource()
     {
-        store.fetchPhotos{
+        store.fetchAllPhotos{
         
             (photosResult) -> Void in
             

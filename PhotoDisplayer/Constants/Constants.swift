@@ -12,7 +12,7 @@ struct Constants
     //default photo values
     static let defaultTitle = "No title"
     static let defaultDescription = "No description available"
-    static let defaultUrlString = ""
+    static let defaultPhotoUrl = ""
     
     
     static let defaultCellImage = UIImage(systemName: "x.circle.fill")

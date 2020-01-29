@@ -1,4 +1,5 @@
 import Foundation
+import CoreData
 
 struct PhotosAPI {
    
@@ -12,7 +13,7 @@ struct PhotosAPI {
 
     //MARK: - JSON Parsing
     
-    static func photos(fromJSON data: Data) -> PhotosResult
+    static func photos(fromJSON data: Data, into context: NSManagedObjectContext) -> PhotosResult
     {
         do{
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
@@ -27,7 +28,7 @@ struct PhotosAPI {
             
             for photoJSON in photosArray {
                 
-                if let photo = photo(fromJSON: photoJSON)
+                if let photo = photo(fromJSON: photoJSON, into: context)
                 {
                     finalPhotos.append(photo)
                 }
@@ -50,15 +51,58 @@ struct PhotosAPI {
     }
     
     //parse json dictionary into photo instance
-    private static func photo(fromJSON json: [String: Any]) -> Photo?
+    private static func photo(fromJSON json: [String: Any], into context: NSManagedObjectContext) -> Photo?
     {
         let title = json[Constants.jsonPhotoTitleKey] as? String ?? Constants.defaultTitle
         let description = json[Constants.jsonPhotoDescriptionKey] as? String ?? Constants.defaultDescription
-        let photoURLString = json[Constants.jsonPhotoUrlStringKey] as? String ?? Constants.defaultUrlString
+        let photoURLString = json[Constants.jsonPhotoUrlStringKey] as? String ?? Constants.defaultPhotoUrl
         let url = URL(string: photoURLString)
+        let photoId = UUID.init().uuidString
         
-        return Photo(title: title, description: description, remoteURL: url)
+        //check if the photo already exists
+        if let existingPhoto = fetchFromCoreData(title: title, context: context)
+        {
+            return existingPhoto
+        }
+        
+         var photo: Photo!
+        //Synchronous operation
+        context.performAndWait {
+            
+            photo = Photo(context: context)
+            photo.title = title
+            photo.photoDescription = description
+            photo.photoId = photoId
+            if let url = url
+            {
+            photo.remoteURL = url as NSURL
+            }
+            
+        }
+        
+        return photo
+        
     }
+    
+   private static func fetchFromCoreData(title: String, context:NSManagedObjectContext)->Photo?
+   {
+        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
+        let predicate = NSPredicate(format: "\(#keyPath(Photo.title)) == %@",title)
+        fetchRequest.predicate = predicate
+                 
+          var fetchedPhotos: [Photo]?
+                 
+         context.performAndWait {
+        
+             fetchedPhotos = try? fetchRequest.execute()
+        
+         }
+         if let existingPhoto = fetchedPhotos?.first
+         {
+             return existingPhoto
+         }
+    return nil
+   }
 }
 
 
